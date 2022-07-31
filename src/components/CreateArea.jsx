@@ -1,7 +1,12 @@
 import React from "react";
 import { useState } from "react";
+import AddIcon from "@material-ui/icons/Add";
+import Fab from "@material-ui/core/Fab"; // Hover
+import Zoom from "@material-ui/core/Zoom"; // animation
 
 function CreateArea(props) {
+    const [isExpanded, setExpanded] = useState(false);
+
     const [note, setNote] = useState({
         title: "",
         content: ""
@@ -9,7 +14,7 @@ function CreateArea(props) {
 
     function handleChange(event) {
         const { name, value } = event.target
-        
+
         setNote(prevNote => {
             return {
                 ...prevNote,
@@ -27,24 +32,37 @@ function CreateArea(props) {
         event.preventDefault();
     }
 
+    function expand() {
+        setExpanded(true);
+    }
 
     return (
         <div>
-            <form>
-                <input
-                    name="title"
-                    placeholder="Title"
-                    onChange={handleChange}
-                    value={note.title}
-                />
+            <form className="create-note">
+                {isExpanded && (
+                    <input
+                        name="title"
+                        placeholder="Title"
+                        onChange={handleChange}
+                        value={note.title}
+                    />
+                )}
+
                 <textarea
                     name="content"
                     placeholder="Take a note..."
-                    rows="5"
+                    rows={isExpanded ? 3 : 1}
                     onChange={handleChange}
                     value={note.content}
+                    onClick={expand}
                 />
-                <button onClick={submitNote}>Add</button>
+                {/*in => If true, the component will transition in.*/}
+                <Zoom in={isExpanded}> 
+                    <Fab onClick={submitNote}>
+                        <AddIcon />
+                    </Fab>
+                </Zoom>
+                {/* <button onClick={submitNote}>Add</button> */}
             </form>
         </div>
     )
